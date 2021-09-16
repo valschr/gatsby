@@ -1,4 +1,4 @@
-const { downloadContentfulAssets } = require(`../download-contentful-assets`)
+import { downloadContentfulAssets } from "../download-contentful-assets"
 
 jest.mock(`gatsby-source-filesystem`, () => {
   return {

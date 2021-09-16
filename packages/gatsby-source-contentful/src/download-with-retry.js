@@ -1,6 +1,6 @@
-const axios = require(`axios`)
-const rax = require(`retry-axios`)
-const { default: PQueue } = require(`p-queue`)
+import axios from "axios"
+import rax from "retry-axios"
+import PQueue from "p-queue"
 
 /**
  * Contentfuls APIs have a general rate limit of 79 uncached requests per second.
@@ -32,7 +32,7 @@ function getAxios(reporter) {
   return RetryAxios
 }
 
-export default async function downloadWithRetry(requestConfig, reporter) {
+export async function downloadWithRetry(requestConfig, reporter) {
   if (!requestConfig.url) {
     throw new Error(`requestConfig.url is missing`)
   }

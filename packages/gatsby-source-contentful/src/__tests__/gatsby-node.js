@@ -7,14 +7,18 @@ jest.mock(`gatsby-core-utils`, () => {
   }
 })
 
-const gatsbyNode = require(`../gatsby-node`)
-const { fetchContent, fetchContentTypes } = require(`../fetch`)
-const normalize = require(`../normalize`)
-const _ = require(`lodash`)
+import _ from "lodash"
+import {
+  onPreBootstrap,
+  createSchemaCustomization,
+  sourceNodes,
+} from "../gatsby-node"
+import { fetchContent, fetchContentTypes } from "../fetch"
+import { makeId } from "../normalize"
 
-const startersBlogFixture = require(`../__fixtures__/starter-blog-data`)
-const richTextFixture = require(`../__fixtures__/rich-text-data`)
-const restrictedContentTypeFixture = require(`../__fixtures__/restricted-content-type`)
+import startersBlogFixture from "../__fixtures__/starter-blog-data"
+import richTextFixture from "../__fixtures__/rich-text-data"
+import restrictedContentTypeFixture from "../__fixtures__/restricted-content-type"
 
 const defaultPluginOptions = { spaceId: `testSpaceId` }
 
@@ -59,14 +63,14 @@ describe(`gatsby-node`, () => {
   const simulateGatsbyBuild = async function (
     pluginOptions = defaultPluginOptions
   ) {
-    await gatsbyNode.onPreBootstrap({ store })
+    await onPreBootstrap({ store })
 
-    await gatsbyNode.createSchemaCustomization(
+    await createSchemaCustomization(
       { schema, actions, reporter },
       pluginOptions
     )
 
-    await gatsbyNode.sourceNodes(
+    await sourceNodes(
       {
         actions,
         getNode,
@@ -106,7 +110,7 @@ describe(`gatsby-node`, () => {
         )
 
         const nodeId = createNodeId(
-          normalize.makeId({
+          makeId({
             spaceId: entry.sys.space.sys.id,
             defaultLocale: defaultLocale,
             currentLocale: locale,
@@ -129,7 +133,7 @@ describe(`gatsby-node`, () => {
           switch (fieldDefinition.type) {
             case `Link`: {
               const linkId = createNodeId(
-                normalize.makeId({
+                makeId({
                   spaceId: entry.sys.space.sys.id,
                   defaultLocale: defaultLocale,
                   currentLocale: locale,
@@ -193,7 +197,7 @@ describe(`gatsby-node`, () => {
     locales.forEach(locale => {
       deletedEntries.forEach(entry => {
         const nodeId = createNodeId(
-          normalize.makeId({
+          makeId({
             spaceId: entry.sys.space.sys.id,
             defaultLocale: defaultLocale,
             currentLocale: locale,
@@ -222,7 +226,7 @@ describe(`gatsby-node`, () => {
     locales.forEach(locale => {
       assets.forEach(asset => {
         const assetId = createNodeId(
-          normalize.makeId({
+          makeId({
             spaceId: asset.sys.space.sys.id,
             defaultLocale: defaultLocale,
             currentLocale: locale,
@@ -242,7 +246,7 @@ describe(`gatsby-node`, () => {
     locales.forEach(locale => {
       assets.forEach(asset => {
         const assetId = createNodeId(
-          normalize.makeId({
+          makeId({
             spaceId: asset.sys.space.sys.id,
             defaultLocale: defaultLocale,
             currentLocale: locale,
@@ -271,7 +275,7 @@ describe(`gatsby-node`, () => {
     locales.forEach(locale => {
       deletedAssets.forEach(asset => {
         const assetId = createNodeId(
-          normalize.makeId({
+          makeId({
             spaceId: asset.sys.space.sys.id,
             defaultLocale: defaultLocale,
             currentLocale: locale,
@@ -380,7 +384,7 @@ describe(`gatsby-node`, () => {
     const createdBlogEntry =
       startersBlogFixture.createBlogPost().currentSyncData.entries[0]
     const createdBlogEntryIds = locales.map(locale =>
-      normalize.makeId({
+      makeId({
         spaceId: createdBlogEntry.sys.space.sys.id,
         currentLocale: locale,
         defaultLocale: locales[0],
@@ -428,7 +432,7 @@ describe(`gatsby-node`, () => {
     const updatedBlogEntry =
       startersBlogFixture.updateBlogPost().currentSyncData.entries[0]
     const updatedBlogEntryIds = locales.map(locale =>
-      normalize.makeId({
+      makeId({
         spaceId: updatedBlogEntry.sys.space.sys.id,
         currentLocale: locale,
         defaultLocale: locales[0],
@@ -482,7 +486,7 @@ describe(`gatsby-node`, () => {
       ? removedBlogEntry.sys.type.substring(`Deleted`.length)
       : removedBlogEntry.sys.type
     const removedBlogEntryIds = locales.map(locale =>
-      normalize.makeId({
+      makeId({
         spaceId: removedBlogEntry.sys.space.sys.id,
         currentLocale: locale,
         defaultLocale: locales[0],
@@ -531,7 +535,7 @@ describe(`gatsby-node`, () => {
     const removedAssetEntry =
       startersBlogFixture.createBlogPost().currentSyncData.entries[0]
     const removedAssetEntryIds = locales.map(locale =>
-      normalize.makeId({
+      makeId({
         spaceId: removedAssetEntry.sys.space.sys.id,
         currentLocale: locale,
         defaultLocale: locales[0],

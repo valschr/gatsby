@@ -1,9 +1,9 @@
 // @ts-check
-const _ = require(`lodash`)
+import _ from "lodash"
 
-const { normalizeContentTypeItems } = require(`./normalize`)
-const { createPluginConfig } = require(`./plugin-options`)
-const { fetchContentTypes } = require(`./fetch`)
+import { fetchContentTypes } from "./fetch"
+import { normalizeContentTypeItems } from "./normalize"
+import { createPluginConfig } from "./plugin-options"
 
 export async function createSchemaCustomization(
   { schema, actions, reporter },

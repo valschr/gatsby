@@ -1,6 +1,3 @@
-// disable output coloring for tests
-process.env.FORCE_COLOR = 0
-
 const mockClient = {
   getLocales: jest.fn(() =>
     Promise.resolve({
@@ -58,12 +55,12 @@ jest.mock(`../plugin-options`, () => {
 // jest so test output is not filled with contentful plugin logs
 global.console = { log: jest.fn(), time: jest.fn(), timeEnd: jest.fn() }
 
-const contentful = require(`contentful`)
-const { fetchContent, fetchContentTypes } = require(`../fetch`)
-const {
+import { createClient } from "contentful"
+import { fetchContent, fetchContentTypes } from "../fetch"
+import {
   formatPluginOptionsForCLI,
   createPluginConfig,
-} = require(`../plugin-options`)
+} from "../plugin-options"
 
 const proxyOption = {
   host: `localhost`,
@@ -111,7 +108,7 @@ beforeEach(() => {
   reporter.panic.mockClear()
   mockClient.getLocales.mockClear()
   formatPluginOptionsForCLI.mockClear()
-  contentful.createClient.mockClear()
+  createClient.mockClear()
 })
 
 afterAll(() => {
@@ -121,7 +118,7 @@ afterAll(() => {
 it(`calls contentful.createClient with expected params`, async () => {
   await fetchContent({ pluginConfig, reporter })
   expect(reporter.panic).not.toBeCalled()
-  expect(contentful.createClient).toBeCalledWith(
+  expect(createClient).toBeCalledWith(
     expect.objectContaining({
       accessToken: `6f35edf0db39085e9b9c19bd92943e4519c77e72c852d961968665f1324bfc94`,
       environment: `env`,
@@ -142,7 +139,7 @@ it(`calls contentful.createClient with expected params and default fallbacks`, a
   })
 
   expect(reporter.panic).not.toBeCalled()
-  expect(contentful.createClient).toBeCalledWith(
+  expect(createClient).toBeCalledWith(
     expect.objectContaining({
       accessToken: `6f35edf0db39085e9b9c19bd92943e4519c77e72c852d961968665f1324bfc94`,
       environment: `master`,
@@ -309,9 +306,7 @@ describe(`Displays troubleshooting tips and detailed plugin options on contentfu
     expect(reporter.panic).toBeCalledWith(
       expect.objectContaining({
         context: {
-          sourceMessage: expect.stringContaining(
-            `Check if host and spaceId settings are correct`
-          ),
+          sourceMessage: expect.stringContaining(`Endpoint not found`),
         },
       })
     )
@@ -350,7 +345,7 @@ describe(`Displays troubleshooting tips and detailed plugin options on contentfu
       expect.objectContaining({
         context: {
           sourceMessage: expect.stringContaining(
-            `Unable to access your space. Check if environment is correct and your accessToken has access to the env and the master environments.`
+            `Unable to access your space.`
           ),
         },
       })
@@ -389,9 +384,7 @@ describe(`Displays troubleshooting tips and detailed plugin options on contentfu
     expect(reporter.panic).toBeCalledWith(
       expect.objectContaining({
         context: {
-          sourceMessage: expect.stringContaining(
-            `Check if accessToken and environment are correct`
-          ),
+          sourceMessage: expect.stringContaining(`Authorization error.`),
         },
       })
     )

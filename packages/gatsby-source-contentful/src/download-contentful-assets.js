@@ -1,6 +1,7 @@
 // @ts-check
-const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
-const { createUrl } = require(`./extend-node-type`)
+import { createRemoteFileNode } from "gatsby-source-filesystem"
+
+import { createUrl } from "./extend-node-type"
 
 /**
  * @name distributeWorkload
@@ -27,13 +28,12 @@ async function distributeWorkload(workers, count = 50) {
  * @param gatsbyFunctions - Gatsby's internal helper functions
  */
 
-const downloadContentfulAssets = async gatsbyFunctions => {
+export const downloadContentfulAssets = async gatsbyFunctions => {
   const {
     actions: { createNode, touchNode },
     createNodeId,
     store,
     cache,
-    getCache,
     getNodesByType,
     reporter,
     assetDownloadWorkers,
@@ -104,4 +104,3 @@ const downloadContentfulAssets = async gatsbyFunctions => {
     assetDownloadWorkers
   )
 }
-exports.downloadContentfulAssets = downloadContentfulAssets

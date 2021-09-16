@@ -1,7 +1,7 @@
 // disable output coloring for tests
 process.env.FORCE_COLOR = 0
 
-const { maskText, formatPluginOptionsForCLI } = require(`../plugin-options`)
+import { maskText, formatPluginOptionsForCLI } from "../plugin-options"
 
 const maskedCharacterCount = input =>
   input.split(``).filter(char => char === `*`).length

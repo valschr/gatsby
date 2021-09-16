@@ -1,13 +1,13 @@
 // @ts-check
-const _ = require(`lodash`)
-const stringify = require(`json-stringify-safe`)
+import stringify from "json-stringify-safe"
+import _ from "lodash"
 
-const { CODES } = require(`./report`)
+import { CODES } from "./report"
 
 const typePrefix = `Contentful`
 const makeTypeName = type => _.upperFirst(_.camelCase(`${typePrefix} ${type}`))
 
-const getLocalizedField = ({ field, locale, localesFallback }) => {
+export const getLocalizedField = ({ field, locale, localesFallback }) => {
   if (!_.isUndefined(field[locale.code])) {
     return field[locale.code]
   } else if (
@@ -23,7 +23,7 @@ const getLocalizedField = ({ field, locale, localesFallback }) => {
     return null
   }
 }
-const buildFallbackChain = locales => {
+export const buildFallbackChain = locales => {
   const localesFallback = {}
   _.each(
     locales,
@@ -36,10 +36,7 @@ const makeGetLocalizedField =
   field =>
     getLocalizedField({ field, locale, localesFallback })
 
-exports.getLocalizedField = getLocalizedField
-exports.buildFallbackChain = buildFallbackChain
-
-const makeId = ({ spaceId, id, currentLocale, defaultLocale, type }) => {
+export const makeId = ({ spaceId, id, currentLocale, defaultLocale, type }) => {
   const normalizedType = type.startsWith(`Deleted`)
     ? type.substring(`Deleted`.length)
     : type
@@ -48,14 +45,12 @@ const makeId = ({ spaceId, id, currentLocale, defaultLocale, type }) => {
     : `${spaceId}___${id}___${normalizedType}___${currentLocale}`
 }
 
-exports.makeId = makeId
-
 const makeMakeId =
   ({ currentLocale, defaultLocale, createNodeId }) =>
   (spaceId, id, type) =>
     createNodeId(makeId({ spaceId, id, currentLocale, defaultLocale, type }))
 
-exports.buildEntryList = ({ contentTypeItems, mergedSyncData }) => {
+export const buildEntryList = ({ contentTypeItems, mergedSyncData }) => {
   // Create buckets for each type sys.id that we care about (we will always want an array for each, even if its empty)
   const map = new Map(
     contentTypeItems.map(contentType => [contentType.sys.id, []])
@@ -71,7 +66,7 @@ exports.buildEntryList = ({ contentTypeItems, mergedSyncData }) => {
   return contentTypeItems.map(contentType => map.get(contentType.sys.id))
 }
 
-exports.buildResolvableSet = ({
+export const buildResolvableSet = ({
   entryList,
   existingNodes = [],
   assets = [],
@@ -96,7 +91,7 @@ exports.buildResolvableSet = ({
   return resolvable
 }
 
-exports.buildForeignReferenceMap = ({
+export const buildForeignReferenceMap = ({
   contentTypeItems,
   entryList,
   resolvable,
@@ -180,11 +175,11 @@ exports.buildForeignReferenceMap = ({
 }
 
 // Check for restricted content type names and set id based on useNameForId
-exports.normalizeContentTypeItems = ({
+export function normalizeContentTypeItems({
   contentTypeItems,
   pluginConfig,
   reporter,
-}) => {
+}) {
   const useNameForId = pluginConfig.get(`useNameForId`)
   const restrictedContentTypes = [`entity`, `reference`, `asset`]
 
@@ -262,7 +257,7 @@ function prepareJSONNode(id, node, key, content) {
   return JSONNode
 }
 
-exports.createNodesForContentType = ({
+export const createNodesForContentType = ({
   contentTypeItem,
   restrictedNodeFields,
   conflictFieldPrefix,
@@ -665,7 +660,7 @@ exports.createNodesForContentType = ({
   return createNodePromises
 }
 
-exports.createAssetNodes = ({
+export const createAssetNodes = ({
   assetItem,
   createNode,
   createNodeId,

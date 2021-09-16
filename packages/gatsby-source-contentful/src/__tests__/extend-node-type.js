@@ -1,11 +1,11 @@
-const {
+import {
   createUrl,
   resolveFixed,
   resolveFluid,
   resolveResize,
   generateImageSource,
   getBase64Image,
-} = require(`../extend-node-type`)
+} from "../extend-node-type"
 
 describe(`contentful extend node type`, () => {
   describe(`createUrl`, () => {

@@ -4,7 +4,7 @@
 
 import nock from "nock"
 
-import downloadAndRetry from "../download-with-retry"
+import { downloadWithRetry } from "../download-with-retry"
 
 nock.disableNetConnect()
 
@@ -25,7 +25,7 @@ describe(`download-with-retry`, () => {
   test(`resolves regular response`, async () => {
     const scope = nock(host).get(path).reply(200)
 
-    await downloadAndRetry({ method: `get`, url }, reporter)
+    await downloadWithRetry({ method: `get`, url }, reporter)
 
     expect(reporter.verbose).not.toHaveBeenCalled()
     expect(scope.isDone()).toBeTruthy()
@@ -34,7 +34,7 @@ describe(`download-with-retry`, () => {
   test(`does not retry for no reason`, async () => {
     const scope = nock(host).get(path).twice().reply(200)
 
-    await downloadAndRetry({ method: `get`, url }, reporter)
+    await downloadWithRetry({ method: `get`, url }, reporter)
 
     expect(reporter.verbose).not.toHaveBeenCalled()
     expect(scope.isDone()).toBeFalsy()
@@ -44,7 +44,7 @@ describe(`download-with-retry`, () => {
     const scope = nock(host).get(path).twice().reply(404)
 
     await expect(
-      downloadAndRetry({ method: `get`, url }, reporter)
+      downloadWithRetry({ method: `get`, url }, reporter)
     ).rejects.toThrowError(
       `Unable to download asset from https://images.ctfassets.net/foo/bar/baz/image.jpg. Request failed with status code 404`
     )
@@ -57,7 +57,7 @@ describe(`download-with-retry`, () => {
   test(`does retry on 503`, async () => {
     const scope = nock(host).get(path).twice().reply(503).get(path).reply(200)
 
-    await downloadAndRetry({ method: `get`, url }, reporter)
+    await downloadWithRetry({ method: `get`, url }, reporter)
 
     expect(reporter.verbose).toHaveBeenCalledTimes(2)
     expect(reporter.verbose).toHaveBeenCalledWith(
@@ -73,7 +73,7 @@ describe(`download-with-retry`, () => {
     const scope = nock(host).get(path).times(4).reply(503)
 
     await expect(
-      downloadAndRetry({ method: `get`, url }, reporter)
+      downloadWithRetry({ method: `get`, url }, reporter)
     ).rejects.toThrowError(
       `Unable to download asset from https://images.ctfassets.net/foo/bar/baz/image.jpg. Request failed with status code 503`
     )

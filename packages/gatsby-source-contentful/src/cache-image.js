@@ -1,14 +1,14 @@
 // @ts-check
-const crypto = require(`crypto`)
-const { resolve, parse } = require(`path`)
+import crypto from "crypto"
+import { resolve, parse } from "path"
 
-const { pathExists, createWriteStream } = require(`fs-extra`)
+import { pathExists, createWriteStream } from "fs-extra"
 
-const downloadWithRetry = require(`./download-with-retry`).default
+import { downloadWithRetry } from "./download-with-retry"
 
 const inFlightImageCache = new Map()
 
-module.exports = async function cacheImage(store, image, options, reporter) {
+export async function cacheImage(store, image, options, reporter) {
   const program = store.getState().program
   const CACHE_DIR = resolve(`${program.directory}/.cache/contentful/assets/`)
   const {
