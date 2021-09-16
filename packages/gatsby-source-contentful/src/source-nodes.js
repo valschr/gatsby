@@ -473,10 +473,14 @@ export async function sourceNodes(
 
   creationActivity.end()
 
-  // @todo add own activity!
-
   if (pluginConfig.get(`downloadLocal`)) {
-    reporter.info(`Download Contentful asset files`)
+    const downloadActivity = reporter.activityTimer(
+      `Contentful: Downloading Contentful asset files (${sourceId})`,
+      {
+        parentSpan,
+      }
+    )
+    downloadActivity.start()
 
     await downloadContentfulAssets({
       actions,
@@ -489,5 +493,7 @@ export async function sourceNodes(
       reporter,
       assetDownloadWorkers: pluginConfig.get(`assetDownloadWorkers`),
     })
+
+    downloadActivity.end()
   }
 }
