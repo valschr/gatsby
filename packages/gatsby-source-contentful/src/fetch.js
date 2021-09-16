@@ -1,3 +1,4 @@
+// @ts-check
 const contentful = require(`contentful`)
 const _ = require(`lodash`)
 const chalk = require(`chalk`)

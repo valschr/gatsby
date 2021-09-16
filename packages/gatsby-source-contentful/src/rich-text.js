@@ -1,3 +1,4 @@
+// @ts-check
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import resolveResponse from "contentful-resolve-response"
 

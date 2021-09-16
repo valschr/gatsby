@@ -1,4 +1,4 @@
-// @todo import syntax!
+// @ts-check
 const _ = require(`lodash`)
 const fetch = require(`@vercel/fetch-retry`)(require(`node-fetch`))
 

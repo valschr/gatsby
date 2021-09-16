@@ -1,3 +1,4 @@
+// @ts-check
 const crypto = require(`crypto`)
 const { resolve, parse } = require(`path`)
 

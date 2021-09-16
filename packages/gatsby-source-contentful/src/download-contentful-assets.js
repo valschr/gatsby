@@ -1,3 +1,4 @@
+// @ts-check
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
 const { createUrl } = require(`./extend-node-type`)
 
@@ -83,7 +84,6 @@ const downloadContentfulAssets = async gatsbyFunctions => {
           cache,
           createNode,
           createNodeId,
-          getCache,
           reporter,
         })
 
